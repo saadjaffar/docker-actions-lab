@@ -1,0 +1,27 @@
+name: Docker Build using run commands
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t bse7_56:latest .
+
+      - name: Verify image is created
+        run: docker images
+
+      - name: Run container and test
+        run: |
+          docker run -d -p 5000:5000 --name test-container bse7_56:latest
+          sleep 5
+          curl http://localhost:5000
+          docker ps
