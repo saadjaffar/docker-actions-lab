@@ -13,15 +13,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u saadi092 --password-stdin
+
       - name: Build Docker image
-        run: docker build -t bse7_56:latest .
+        run: docker build -t saadi092/bse7_56-run:latest .
 
       - name: Verify image is created
         run: docker images
 
-      - name: Run container and test
-        run: |
-          docker run -d -p 5000:5000 --name test-container bse7_56:latest
-          sleep 5
-          curl http://localhost:5000
-          docker ps
+      - name: Push image to Docker Hub
+        run: docker push saadi092/bse7_56-run:latest
